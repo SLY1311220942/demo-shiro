@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8" />
+		<title>Insert title here</title>
+	</head>
+	<script>
+		var webRoot = '[[${#httpServletRequest.getContextPath()}]]';
+	</script>
+<body>
+	<div>
+		<label for="username">用户名</label><input type="text" id="username" name="username" /> 
+		<label for="password">用户名</label><input type="text" id="password" name="password" />
+	</div>
+	<div>
+		<button onclick="login();">提交</button>
+	</div>
+</body>
+<script th:src="@{/common.js}"></script>
+<script th:src="@{/jquery.min.js}"></script>
+<script>
+	function login() {
+		$.ajax({
+			type : "post",
+			url : webRoot + "/login/login",
+			data : {
+				username : $.trim($("#username").val()),
+				password : $.trim($("#password").val()),
+				isAjax : 1
+			},
+			success : function(data) {
+				if(data.status == 200){
+					top.location = "/demoshiro/login/toHome";
+				}else{
+					alert(data.status + ":" + data.message);
+				}
+			}
+		});
+	}
+</script>
+</html>
