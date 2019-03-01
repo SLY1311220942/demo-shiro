@@ -21,10 +21,10 @@ import com.sly.demo.shiro.model.User;
  * @time 2019年2月25日
  */
 public class MyShiroRealm extends AuthorizingRealm {
-	
-	
+
 	/**
-	 * _授予用户权限
+	 * _授予用户权限(每次访问受限资源时执行一次)
+	 * 
 	 * @param principals
 	 * @return
 	 * @author sly
@@ -33,12 +33,12 @@ public class MyShiroRealm extends AuthorizingRealm {
 	@Override
 	protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
 		// 获取用户
-		//User user = (User) SecurityUtils.getSubject().getPrincipal();
+		// User user = (User) SecurityUtils.getSubject().getPrincipal();
 
 		SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
 		// 获取用户角色
 		Set<String> roleSet = new HashSet<String>();
-		roleSet.add("business");
+		//roleSet.add("business");
 		roleSet.add("system");
 		info.setRoles(roleSet);
 
@@ -53,7 +53,8 @@ public class MyShiroRealm extends AuthorizingRealm {
 	}
 
 	/**
-	 * _验证用户身份
+	 * _验证用户身份(登录时执行一次)
+	 * 
 	 * @param token
 	 * @return
 	 * @throws AuthenticationException
@@ -61,18 +62,26 @@ public class MyShiroRealm extends AuthorizingRealm {
 	 * @time 2019年2月25日
 	 */
 	@Override
-	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken) throws AuthenticationException {
+	protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authcToken)
+			throws AuthenticationException {
 		UsernamePasswordToken token = (UsernamePasswordToken) authcToken;
-        String username = token.getUsername();
-        String password = String.valueOf(token.getPassword());
+		String username = token.getUsername();
+		String password = String.valueOf(token.getPassword());
 
-        User user = new User();
-        user.setId("test01");
-        user.setUsername(username);
-        user.setPassword(password);
+		User user = new User();
+		user.setId("test01");
+		user.setUsername(username);
+		user.setPassword(password);
 
-        return new SimpleAuthenticationInfo(user, password, getName());
+		boolean flag = true;
+
+		if (flag) {
+			// 登录成功执行
+			return new SimpleAuthenticationInfo(user, password, getName());
+		}
+
+		return null;
 
 	}
-	
+
 }
