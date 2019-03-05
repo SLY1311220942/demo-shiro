@@ -7,3 +7,5 @@ shiro与springboot的demo
 
 没有从数据读取权限,如果需要读取,可以根据自己需求去实现
 
+#
+complete!
